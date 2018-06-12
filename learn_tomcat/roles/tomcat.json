@@ -1,0 +1,16 @@
+{
+  "name": "tomcat",
+  "description": "Runs tomcat with JDK",
+  "default_attributes": {
+	"tomcat": {
+		"base_version":8,
+		"port": 8081
+		}
+	},
+	
+   "run_list": [
+	"recipe[java]",
+	"recipe[learn_tomcat]"
+	]
+
+}
