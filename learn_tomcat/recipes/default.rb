@@ -38,6 +38,14 @@ template "#{node['tomcat']['tomcat_home']}/bin/setenv.sh" do
    group node['tomcat']['group_name']
 end
 
+#Tomcat init script configuration
+template "/etc/init.d/learn_tomcat" do
+  source 'init.conf.erb'
+  mode '0755'
+  owner node['tomcat']['user_name']
+  group node['tomcat']['group_name'] 
+end
+
 #copy sample.war file from source to remote location
 remote_file "#{node['tomcat']['tomcat_home']}/webapps/sample.war" do
    owner node['tomcat']['user_name']
