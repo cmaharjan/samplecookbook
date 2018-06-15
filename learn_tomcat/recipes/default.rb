@@ -14,9 +14,8 @@ user node['tomcat']['user_name'] do
 end
 
 #Install Tomcat 8.0.47 to the default location
-ark 'tomcat_serwar' do
+ark node['tomcat']['tomcat_dirname'] do
    url node['tomcat']['tomcat_package']
-   home_dir node['tomcat']['tomcat_home']
    owner node['tomcat']['user_name']
    group node['tomcat']['group_name']
    action :put
@@ -39,7 +38,7 @@ template "#{node['tomcat']['tomcat_home']}/bin/setenv.sh" do
 end
 
 #Tomcat init script configuration
-template "/etc/init.d/learn_tomcat" do
+template "/etc/init.d/#{node['tomcat']['tomcat_dirname']}" do
   source 'init.conf.erb'
   mode '0755'
   owner node['tomcat']['user_name']
@@ -55,12 +54,12 @@ end
 
 
 #start and enable the helloworld tomcat service 
-service 'tomcat_serwar' do
+service node['tomcat']['tomcat_dirname'] do
   action [:enable, :start]
   owner node['tomcat']['user_name']
   group node['tomcat']['group_name']
-  subscribes :restart, "template[#{node['tomcat']['catalina_file']}]", :delayed
-  subscribes :restart, "template[#{node['tomcat']['server_file']}]", :delayed
+  subscribes :restart, "template[#{node['tomcat']['tomcat_home']}/bin/setenv.sh]", :delayed
+  subscribes :restart, "template[#{node['tomcat']['tomcat_home']}/conf/server.xml]", :delayed
 
 end
 
