@@ -7,10 +7,10 @@ package 'httpd'
 service 'httpd' do
   action [:enable, :start]
 end
-group 'web_admin'
+group node['httpd']['group']
 
-user 'web_admin' do
-   group 'web_admin'
+user node['httpd']['user'] do
+   group node['httpd']['group']
    system true
    shell '/bin/bash'
 end
@@ -18,6 +18,13 @@ end
 template '/var/www/html/index.html' do 
   source 'index.html.erb'
   mode '0644'
-  owner 'web_admin'
-  group 'web_admin'
+  owner node['httpd']['user']
+  group node['httpd']['group']
+end
+
+template '/etc/httpd/conf/httpd.conf' do
+  source 'httpd.conf.erb'
+  mode '0644'
+  owner node['httpd']['user']
+  group node['httpd']['group']
 end
