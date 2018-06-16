@@ -352,6 +352,6 @@ EnableSendfile on
 # Load config files in the "/etc/httpd/conf.d" directory, if any.
 IncludeOptional conf.d/*.conf
 <VirtualHost *:"<%= node['httpd']['port'] %>">
-  ProxyPass / http://"<%= node['httpd']['tomcat_proxy'] %>:<%= node['httpd']['proxy_port'] %>/"
+  ProxyPass / http://"<%= node['httpd']['tomcat_proxy'] %>":"<%= node['httpd']['proxy_port'] %>/"
 
 </VirtualHost>
