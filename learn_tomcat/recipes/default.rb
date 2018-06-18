@@ -52,6 +52,15 @@ remote_file "#{node['tomcat']['tomcat_home']}/webapps/sample.war" do
   source node['tomcat']['source_file']
 end
 
+#create default catalina.pid file to prevent restart error for 1st run of cookbook
+file "#{node['tomcat']['tomcat_home']}/catalina.pid" do
+  mode '0755'
+  owner node['tomcat']['user_name']
+  group node['tomcat']['group_name']
+  action :create
+  not_if { ::File.exist?("#{node['tomcat']['tomcat_home']}/catalina.pid")}
+end
+
 # start and enable the helloworld tomcat service
 service node['tomcat']['tomcat_dirname'] do
   supports :restart =>true
