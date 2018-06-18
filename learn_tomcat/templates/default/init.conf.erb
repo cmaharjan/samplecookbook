@@ -1,10 +1,11 @@
 #!/bin/bash
 
-
+#source fuction library
 . /etc/init.d/functions
 
 TOMCAT_USER=<%= node['tomcat']['user_name'] %>
 CATALINA_HOME=<%= node['tomcat']['tomcat_home'] %>
+CATALINA_PID=$CATALINA_HOME/catalina.pid
 
 case "$1" in
 start)
@@ -23,9 +24,29 @@ restart)
     $0 start
 ;;
 
+status)
+    if [ -f "$CATALINA_PID" ]; then
+	pid=`cat "$CATALINA_PID"`
+        if [ "$pid" != "" ]; then
+	   if [ -d /proc/$pid ]; then
+                # Process is running
+                ISRUNNING="1"
+                echo "Tomcat is running with pid $pid"
+                exit 0
+   	   else
+                echo "Tomcat not running (removing stalled PID file)"
+                rm -f "$CATALINA_PID"
+                exit 1
+           fi
+        fi
+    else
+        echo "Tomcat is not running (or $CATALINA_PID is missing)"
+        exit 1 
+    fi
+;;
 
 *)
-    echo $"Usage: $0 {start|stop|restart}"
+    echo $"Usage: $0 {start|stop|restart|status}"
     exit 1
 ;;
 
