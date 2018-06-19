@@ -38,8 +38,9 @@ template "#{node['tomcat']['tomcat_home']}/bin/setenv.sh" do
 end
 
 # Tomcat init script configuration
-template "/etc/init.d/#{node['tomcat']['tomcat_dirname']}" do
-  source 'init.conf.erb'
+#template "/etc/init.d/#{node['tomcat']['tomcat_dirname']}" do
+template "/etc/init.d/tomcat8" do
+ source 'init.conf.erb'
   mode '0755'
   owner node['tomcat']['user_name']
   group node['tomcat']['group_name']
@@ -62,7 +63,8 @@ file "#{node['tomcat']['tomcat_home']}/catalina.pid" do
 end
 
 # start and enable the helloworld tomcat service
-service node['tomcat']['tomcat_dirname'] do
+#service node['tomcat']['tomcat_dirname'] do
+service "tomcat8" do
   supports :restart =>true
   action :enable
 #  owner node['tomcat']['user_name']
