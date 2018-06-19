@@ -1,0 +1,15 @@
+#!/bin/bash
+
+TOMCAT_USER=<%= node['tomcat']['user_name'] %>
+CATALINA_HOME=<%= node['tomcat']['tomcat_home'] %>
+CATALINA_PID=$CATALINA_HOME/catalina.pid
+
+[Unit]
+     Description=running tomcat8 service
+     After=syslog.target
+[Service]
+     ExecStart="$CATALINA_HOME/bin/catalina.sh"
+     Type=forking
+     PIDFile="$CATALINA_PID"
+[Install]
+     WantedBy=multi-user.target
