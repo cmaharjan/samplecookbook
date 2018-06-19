@@ -39,12 +39,19 @@ end
 
 # Tomcat init script configuration
 #template "/etc/init.d/#{node['tomcat']['tomcat_dirname']}" do
-template "/etc/init.d/tomcat8" do
- source 'init.conf.erb'
+#template "/etc/init.d/tomcat8" do
+# source 'init.conf.erb'
+#  mode '0755'
+#  owner node['tomcat']['user_name']
+#  group node['tomcat']['group_name']
+#end
+template "/usr/lib/systemd/system/tomcat8.service" do
+  source 'tomcat8.service.erb'
   mode '0755'
   owner node['tomcat']['user_name']
   group node['tomcat']['group_name']
 end
+
 
 # copy sample.war file from source to remote location
 remote_file "#{node['tomcat']['tomcat_home']}/webapps/sample.war" do
@@ -64,7 +71,7 @@ end
 
 # start and enable the helloworld tomcat service
 #service node['tomcat']['tomcat_dirname'] do
-service "tomcat8" do
+service "tomcat8.service" do
   supports :restart =>true
   action :enable
 #  owner node['tomcat']['user_name']
