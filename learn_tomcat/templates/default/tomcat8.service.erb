@@ -1,15 +1,32 @@
 #!/bin/bash
 
 TOMCAT_USER=<%= node['tomcat']['user_name'] %>
-CATALINA_HOME=<%= node['tomcat']['tomcat_home'] %>
-CATALINA_PID=$CATALINA_HOME/catalina.pid
+#CATALINA_HOME=<%= node['tomcat']['tomcat_home'] %>
+#CATALINA_PID=$CATALINA_HOME/catalina.pid
 
 [Unit]
      Description=running tomcat8 service
-     After=syslog.target
+     After=syslog.target network.target
+
 [Service]
-     ExecStart="$CATALINA_HOME/bin/catalina.sh"
-     Type=forking
-     PIDFile="$CATALINA_PID"
+     RemainAfterExit=yes
+ #    Environment=JAVA_OPTS="-Xmx512m"
+     Environment=JAVA_HOME=/usr/lib/jvm/java-1.6.0
+     Environment=CATALINA_HOME=/usr/local/tomcat_serwar
+     Environment=CATALINA_BASE=/usr/local/tomcat_serwar
+     Environment=CATALINA_PID=/usr/local/tomcat_serwar/catalina.pid
+
+     ExecStart=/usr/local/tomcat_serwar/bin/catalina.sh start -d -s
+     ExecReload=/usr/local/tomcat_serwar/bin/catalina.sh reload
+     ExecStop=/usr/local/tomcat_serwar/bin/catalina.sh stop 
+
+     StandardOutput=syslog
+     StandardError=syslog
+     Type=simple
+#     PIDFile=/usr/local/tomcat_serwar/catalina.pid
+
+     User=cool_user
+     Group=cool_group
+
 [Install]
      WantedBy=multi-user.target
