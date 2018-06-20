@@ -33,3 +33,20 @@ template '/etc/httpd/conf/httpd.conf' do
   owner node['httpd']['user']
   group node['httpd']['group']
 end
+
+include_recipe 'nginx'
+
+template '/etc/nginx/nginx.conf' do
+  source 'nginx.conf.erb'
+  mode '0644'
+  owner node['httpd']['user']
+  group node['httpd']['group']
+  notifies :reload, 'service[nginx]', :delayed
+end
+
+service 'nginx' do
+  supports :status => true, :restart => true, :reload => true
+  action :enable
+end
+
+
