@@ -10,5 +10,13 @@ default['tomcat']['group_name'] = 'cool_group'
 default['tomcat']['user_name'] = 'cool_user'
 
 # configuration
-default['tomcat']['java-opts'] = '-Xmx512m'
+default['tomcat']['java_opts'] = '-Xms512M'
 default['tomcat']['port'] = '8081'
+default['tomcat']['autostart'] = 'true'
+
+# Conifguration for httpd
+
+default['httpd']['user'] = 'web_admin'
+default['httpd']['group'] = 'web_admin'
+default['httpd']['port'] = '80'
+default['httpd']['proxy_port'] = '8081'
