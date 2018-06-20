@@ -47,7 +47,7 @@ end
 #end
 template "/usr/lib/systemd/system/tomcat8.service" do
   source 'tomcat8.service.erb'
-  mode '0755'
+  mode '0644'
   owner node['tomcat']['user_name']
   group node['tomcat']['group_name']
 end
@@ -73,7 +73,8 @@ end
 #service node['tomcat']['tomcat_dirname'] do
 service "tomcat8.service" do
   supports :restart =>true
-  action :enable
+  action [:enable, :start]
+#  only_if { node['tomcat']['autostart'] }
 #  owner node['tomcat']['user_name']
 #  group node['tomcat']['group_name']
   subscribes :restart, "template[#{node['tomcat']['tomcat_home']}/bin/setenv.sh]", :delayed
@@ -81,6 +82,6 @@ service "tomcat8.service" do
 end
 
 # resource for debug 
-breakpoint 'tomact-debug' do
-  action :break
-end
+#breakpoint 'tomact-debug' do
+#  action :break
+#end
