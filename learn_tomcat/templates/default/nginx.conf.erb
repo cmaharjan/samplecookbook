@@ -89,6 +89,7 @@ http {
 }
 
 server {
+
     location / {
         proxy_pass http://localhost:"<%= node['tomcat']['proxy_port'] %>/";
 	}
