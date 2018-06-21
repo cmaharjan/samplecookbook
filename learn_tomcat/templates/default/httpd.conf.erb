@@ -39,7 +39,7 @@ ServerRoot "/etc/httpd"
 # prevent Apache from glomming onto all bound IP addresses.
 #
 #Listen 12.34.56.78:80
-Listen "<%= node['httpd']['port'] %>"
+Listen "<%= node['listen']['port'] %>"
 
 #
 # Dynamic Shared Object (DSO) Support
@@ -351,7 +351,7 @@ EnableSendfile on
 #
 # Load config files in the "/etc/httpd/conf.d" directory, if any.
 IncludeOptional conf.d/*.conf
-<VirtualHost *:"<%= node['httpd']['port'] %>">
-  ProxyPass / http://localhost:"<%= node['httpd']['proxy_port'] %>/"
+<VirtualHost *:"<%= node['listen']['port'] %>">
+  ProxyPass / http://localhost:"<%= node['tomcat']['proxy_port'] %>/"
 
 </VirtualHost>
