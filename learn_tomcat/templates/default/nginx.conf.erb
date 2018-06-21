@@ -36,8 +36,8 @@ http {
     include /etc/nginx/conf.d/*.conf;
 
     server {
-        listen       80 default_server;
-        listen       [::]:80 default_server;
+        listen       <%= node['listen']['port'] %> default_server;
+        listen       [::]:<%= node['listen']['port'] %> default_server;
         server_name  _;
         root         /usr/share/nginx/html;
 
@@ -90,7 +90,7 @@ http {
 
 server {
     location / {
-        proxy_pass http://localhost:"<%= node['httpd']['proxy_port'] %>/"
+        proxy_pass http://localhost:"<%= node['tomcat']['proxy_port'] %>/";
 	}
 
 
