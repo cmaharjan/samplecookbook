@@ -16,7 +16,10 @@ default['tomcat']['autostart'] = 'true'
 
 # Conifguration for httpd
 
-default['httpd']['user'] = 'web_admin'
-default['httpd']['group'] = 'web_admin'
-default['httpd']['port'] = '80'
-default['httpd']['proxy_port'] = '8081'
+default['web']['user'] = 'web_admin'
+default['web']['group'] = 'web_admin'
+default['listen']['port'] = '80'
+default['tomcat']['proxy_port'] = '8081'
+
+
+default['webserver'] = 'apache'
