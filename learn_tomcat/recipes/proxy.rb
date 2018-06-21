@@ -3,50 +3,53 @@
 # Recipe:: proxy
 #
 # Creating a group
-group node['httpd']['group']
+group node['web']['group']
 
 #Creating a user
-user node['httpd']['user'] do
-   group node['httpd']['group']
+user node['web']['user'] do
+   group node['web']['group']
    system true
    shell '/bin/bash'
 end
 
-# Installing apache package
-package 'httpd'
+if node['webserver'] == 'apache'
+    # Installing apache package
+    package 'httpd'
 
-# Enabling and starting apache package
-service 'httpd' do
-  action [:enable, :start]
+    # Enabling and starting apache package
+    service 'httpd' do
+      action [:enable, :start]
+    end
+
+    template '/var/www/html/index.html' do
+      source 'index.html.erb'
+      mode '0644'
+      owner node['web']['user']
+      group node['web']['group']
+    end
+
+    template '/etc/httpd/conf/httpd.conf' do
+      source 'httpd.conf.erb'
+      mode '0644'
+      owner node['web']['user']
+      group node['web']['group']
+    end
+
+else
+       #include_recipe 'nginx'
+    package 'nginx'
+
+    template '/etc/nginx/nginx.conf' do
+      source 'nginx.conf.erb'
+      mode '0644'
+      owner node['web']['user']
+      group node['web']['group']
+      notifies :reload, 'service[nginx]', :delayed
+   end
+
+   service 'nginx' do
+     supports :status => true, :restart => true, :reload => true
+     action :enable
+   end
+
 end
-
-template '/var/www/html/index.html' do
-  source 'index.html.erb'
-  mode '0644'
-  owner node['httpd']['user']
-  group node['httpd']['group']
-end
-
-template '/etc/httpd/conf/httpd.conf' do
-  source 'httpd.conf.erb'
-  mode '0644'
-  owner node['httpd']['user']
-  group node['httpd']['group']
-end
-
-include_recipe 'nginx'
-
-template '/etc/nginx/nginx.conf' do
-  source 'nginx.conf.erb'
-  mode '0644'
-  owner node['httpd']['user']
-  group node['httpd']['group']
-  notifies :reload, 'service[nginx]', :delayed
-end
-
-service 'nginx' do
-  supports :status => true, :restart => true, :reload => true
-  action :enable
-end
-
-
